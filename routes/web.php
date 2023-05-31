@@ -34,6 +34,8 @@ Route::prefix('/admin')->name('admin.')->controller(AdminController::class)->gro
         Route::post('/create-product', 'store')->name('store');
         Route::get('/edit-product/{id}', 'edit')->name('edit');
         Route::post('/edit-product', 'update')->name('update');
+        Route::get('/destroy-product/{id}', 'destroy')->name('destroy');
+
 
     });
     Route::prefix("/category")->name("category.")->controller(\App\Http\Controllers\Admin\CategoriesController::class)->group(function () {
@@ -42,7 +44,18 @@ Route::prefix('/admin')->name('admin.')->controller(AdminController::class)->gro
         Route::post('/create-category', 'store')->name('store');
         Route::post('/edit-category', 'update')->name('update');
         Route::get('/edit-category/{id}', 'edit')->name('edit');
-        Route::get('/destroy-category', 'destroy')->name('destroy');
+        Route::get('/destroy-category/{id}', 'destroy')->name('destroy');
+
+
+    });
+
+    Route::prefix("/announcement")->name("announcement.")->controller(\App\Http\Controllers\Admin\AnnouncementsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create-announcement', 'create')->name('create');
+        Route::post('/create-announcement', 'store')->name('store');
+        Route::post('/edit-announcement', 'update')->name('update');
+        Route::get('/edit-announcement/{id}', 'edit')->name('edit');
+        Route::get('/destroy-announcement/{id}', 'destroy')->name('destroy');
 
 
     });

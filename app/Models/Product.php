@@ -11,8 +11,16 @@ class Product extends Model
 
     protected $fillable=[
         "name","description",
-        "price","stock","picture","category_id"
+        "price","stock","picture","category_id","id"
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
+    public function announcements(){
+        return $this->hasMany(Announcement::class);
+    }
 
     protected $casts=[
         "price"=>"float",

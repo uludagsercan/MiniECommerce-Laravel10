@@ -1,5 +1,5 @@
 @extends('layouts.admin-layout')
-@section("title","Categories")
+@section("title","Announcement")
 
 @section("content")
     <section class="content">
@@ -10,13 +10,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Categories</h3>
+                            <h3 class="card-title">Announcements</h3>
 
                             <div class="card-tools">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <td><a href="{{route("admin.category.create")}}" class="btn btn-outline-primary">Create Category</a></td>
+                                            <td><a href="{{route("admin.announcement.create")}}" class="btn btn-outline-primary">Create Announcement</a></td>
                                         </div>
     
                                     </div>
@@ -42,21 +42,22 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Category Name</th>
-                                    <th>Category Description</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
-
+                                    <th>Announcement Title</th>
+                                    <th>Announcement Description</th>
+                                    <th>Product Name</th>
+                                    <th>Product Description</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($categories as $category)
+                                @foreach($announcements as $announcement)
                                     <tr>
-                                        <td>{{ $category->id }}</td>
-                                        <td>{{$category->name }}</td>
-                                        <td>{{ $category->description}}</td>
-                                        <td><a href="{{route('admin.category.edit',["id"=>$category->id])}}" class="btn btn-outline-info">Update Category</a></td>
-                                        <td><a href="{{route('admin.category.destroy',["id"=>$category->id])}}" type="button" class="btn btn-outline-secondary">Delete Category</a></td>
+                                        <td>{{$announcement->id }}</td>
+                                        <td>{{$announcement->announcement_title }}</td>
+                                        <td>{{ $announcement->announcement_description}}</td>
+                                        <td>{{ $announcement->product->name}}</td>
+                                        <td>{{ $announcement->product->description}}</td>
+                                        <td><a href="{{route('admin.announcement.edit',["id"=>$announcement->id])}}" class="btn btn-outline-info">Update Announcement</a></td>
+                                        <td><a href="{{route('admin.announcement.destroy',["id"=>$announcement->id])}}" type="button" class="btn btn-outline-secondary">Delete Announcement</a></td>
 
 
                                     </tr>
