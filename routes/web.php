@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController as AdminController;
+use App\Http\Controllers\Admin\MailBoxController;
+use App\Http\Controllers\Admin\ProductsContoller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('admin-components.index');
+// });
+
+
+Route::prefix('/admin')->name('admin.')->controller(AdminController::class)->group(function () {
+    Route::get('/', "index")->name("index");
+    Route::prefix('/mailbox')->name('mailbox.')->controller(MailBoxController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/send-mail', 'create')->name('sendMail');
+        Route::post('/send-mail', 'sendMail');
+    });
+    Route::prefix("/product")->name("product.")->controller(ProductsContoller::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create-product', 'create')->name('create');
+        Route::post('/create-product', 'store')->name('store');
+        Route::get('/edit-product/{id}', 'edit')->name('edit');
+        Route::post('/edit-product', 'update')->name('update');
+
+    });
+    Route::prefix("/category")->name("category.")->controller(\App\Http\Controllers\Admin\CategoriesController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create-category', 'create')->name('create');
+        Route::post('/create-category', 'store')->name('store');
+        Route::post('/edit-category', 'update')->name('update');
+        Route::get('/edit-category/{id}', 'edit')->name('edit');
+        Route::get('/destroy-category', 'destroy')->name('destroy');
+
+
+    });
 });
