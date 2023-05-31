@@ -18,7 +18,7 @@ class CategoriesController extends Controller
     {
         //
         $categories = Category::all();
-        return view('admin-components.category.index',["categories"=>$categories]);
+        return view('admin-components.category.index', ["categories" => $categories]);
     }
 
     /**
@@ -41,7 +41,7 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         $category = new Category();
-        $data= $request->only($category->getFillable());
+        $data = $request->only($category->getFillable());
         $category->fill($data)->save();
         return redirect("admin/category");
     }
@@ -66,8 +66,8 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         //
-        $category = Category::all()->where("id","=",$id)->first();
-        return view("admin-components.category.update",["category"=>$category]);
+        $category = Category::all()->where("id", "=", $id)->first();
+        return view("admin-components.category.update", ["category" => $category]);
     }
 
     /**
@@ -81,11 +81,11 @@ class CategoriesController extends Controller
     {
         //
 
-        $data= $request->all();
+        $data = $request->all();
         $category->fill($data);
-        DB::table("categories")->where("id",$category["id"])
-            ->update(["name"=>$category["name"],"description"=>$category["description"]]);
-       return redirect("admin/category");
+        DB::table("categories")->where("id", $category["id"])
+            ->update(["name" => $category["name"], "description" => $category["description"]]);
+        return redirect("admin/category");
     }
 
     /**
@@ -94,8 +94,12 @@ class CategoriesController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
         //
+
+        $category = Category::find($id);
+        $category->delete();
+        return redirect("admin/category");
     }
 }

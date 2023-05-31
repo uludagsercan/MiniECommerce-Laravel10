@@ -1,7 +1,12 @@
 @extends('layouts.admin-layout')
 @section("title","Update Product")
+
+@section("link")
+
+<link rel="stylesheet" href="/assets/admin/product/update-component.css">
+@endsection
 @section("content")
-    <form method="post" action="{{route('admin.product.update')}}" >
+    <form method="post" action="{{route('admin.product.update')}}" enctype="multipart/form-data">
         @csrf
         <input id="cName" type="text" class="form-control" value="{{$product->id}}"  style="visibility: hidden"  name="id">
 
@@ -45,10 +50,19 @@
                         <label for="cStock" >Stock</label>
                         <input id="cStock" type="text" class="form-control" value="{{$product->stock}}" name="stock">
                     </div>
+
                     <div class="form-group mb-3">
-                        <label for="cPicture" >Picture</label>
-                        <input id="cPicture" type="text" class="form-control" value="{{$product->picture}}" name="picture">
-                    </div>
+                        <label for="cPicture">Picture</label>
+                        <div class="input-group">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="cPicture" name="picture">
+                            <label class="custom-file-label" for="cPicture" >Choose file</label>
+                            <img src="{{asset('/storage/images/products/'.$product->picture)}}" alt="product"  style="width: 50px;" >
+                          </div>
+                        
+                        </div>
+                      </div>
+                 
                     <div class="input-group mb-3">
 
                         <button type="submit" class="btn btn-secondary">Update</button>

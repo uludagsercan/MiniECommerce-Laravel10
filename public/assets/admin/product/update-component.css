@@ -1,0 +1,7 @@
+.custom-file img{
+    width: 100px;
+    transform: translateX(-77.5px);
+    z-index: 999999;
+    height: 32.7px;
+    position: relative;
+}
