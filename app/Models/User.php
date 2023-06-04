@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'role_id',
         'role',
+        "mailboxes",
         "id"
     ];
 
@@ -48,6 +49,10 @@ class User extends Authenticatable
 
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+
+    public function mailboxes(){
+        return $this->hasMany(Mailbox::class);
     }
 
 

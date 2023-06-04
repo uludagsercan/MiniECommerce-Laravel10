@@ -53,7 +53,7 @@
                                     <th>Product Description</th>
                                     <th>Product Price</th>
                                     <th>Product Stock</th>
-                                  
+                                    <th>View</th>
                                     <th>Update</th>
                                     <th>Delete</th>
 
@@ -70,6 +70,7 @@
                                         <td>{{ $product->description}}</td>
                                         <td>{{ $product->price}}$</td>
                                         <td>{{ $product->stock}}</td>
+                                        <td><a href="{{route("admin.product.show",["id"=>$product->id])}}" class="btn btn-outline-info">View Product</a></td>
                                         <td><a href="{{route("admin.product.edit",["id"=>$product->id])}}" class="btn btn-outline-info">Update Product</a></td>
                                         <td><a href="{{route("admin.product.destroy",["id"=>$product->id])}}" class="btn btn-outline-secondary">Delete Product</a></td>
                                     </tr>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RolesController extends Controller
 {
@@ -16,6 +17,8 @@ class RolesController extends Controller
     public function index()
     {
         //
+        $roles = Role::all();
+        return view("admin-components.role.index",["roles"=>$roles]);
     }
 
     /**
@@ -26,6 +29,7 @@ class RolesController extends Controller
     public function create()
     {
         //
+        return view("admin-components.role.create");
     }
 
     /**
@@ -37,6 +41,14 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => ['required', 'max:20','min:3'],
+        ]);
+        $role = new Role();
+        $data= $request->all();
+        $role->fill($data);
+        $role->save();
+        return redirect("admin/role");
     }
 
     /**
@@ -56,9 +68,12 @@ class RolesController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit($id)
     {
         //
+        $role = Role::find($id);
+        return view("admin-components.role.update",["role"=>$role]);
+        
     }
 
     /**
@@ -71,6 +86,15 @@ class RolesController extends Controller
     public function update(Request $request, Role $role)
     {
         //
+        $request->validate([
+            'name' => ['required', 'max:20','min:3'],
+        ]);
+        $data = $request->all();
+        $role->fill($data);
+        DB::table("roles")->where("id",$request->id)->update([
+            "name"=>$role["name"]
+        ]);
+        return redirect("admin/role");
     }
 
     /**
@@ -79,8 +103,11 @@ class RolesController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
         //
+        $role = Role::find($id);
+        $role->delete();
+        return redirect("admin/role");
     }
 }

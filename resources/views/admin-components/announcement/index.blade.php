@@ -36,6 +36,7 @@
                               
                             </div>
                         </div>
+               
                         <!-- /.card-header -->
                         <div class="card-body table-responsive p-0">
                             <table class="table table-hover text-nowrap">
@@ -46,6 +47,10 @@
                                     <th>Announcement Description</th>
                                     <th>Product Name</th>
                                     <th>Product Description</th>
+                                    <th>View</th>
+                                    <th>Update</th>
+                                    <th>Delete</th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -56,6 +61,8 @@
                                         <td>{{ $announcement->announcement_description}}</td>
                                         <td>{{ $announcement->product->name}}</td>
                                         <td>{{ $announcement->product->description}}</td>
+                                        <td><a href="{{route('admin.announcement.show',["id"=>$announcement->id])}}" class="btn btn-outline-primary">View Announcement</a></td>
+
                                         <td><a href="{{route('admin.announcement.edit',["id"=>$announcement->id])}}" class="btn btn-outline-info">Update Announcement</a></td>
                                         <td><a href="{{route('admin.announcement.destroy',["id"=>$announcement->id])}}" type="button" class="btn btn-outline-secondary">Delete Announcement</a></td>
 

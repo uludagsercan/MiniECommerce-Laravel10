@@ -43,6 +43,12 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => ['required', 'max:255','min:3'],
+            'email' => ['required', 'max:255','email'],
+            'password' =>['required', 'min:8','max:255'],
+            'role_id'=>['required']
+        ]);
         $password = $request["password"];
         $hash_password = bcrypt($password);
         $user = new User();
@@ -50,7 +56,7 @@ class UsersController extends Controller
         $user->fill($data);
         $user["password"]=$hash_password;
         $user->save();
-        return redirect("admin/user");
+        return redirect()->back()->with("successMessage","Ekleme İşlemi Başarılıdır");
     }
 
     /**
@@ -59,10 +65,14 @@ class UsersController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($id)
     {
         //
+        $user = User::with("role")->find($id);
+        return view("admin-components.user.profile",["user"=>$user]);
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -88,14 +98,16 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         //
-        $password = $request["password"];
-        $hash_password = bcrypt($password);
+        $request->validate([
+            'name' => ['required', 'max:255','min:3'],
+            'email' => ['required', 'max:255','email'],
+        ]);
         $data = $request->all();
         $user->fill($data);
-        $user["password"]=$hash_password;
+     
         DB::table("users")->where("id",$user->id)->update([
             "name"=>$user["name"],
-            "password"=>"".$user["password"],
+       
             "email"=>$user["email"],
             "role_id"=>$user["role_id"]
         ]);

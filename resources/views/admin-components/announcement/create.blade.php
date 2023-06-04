@@ -1,7 +1,7 @@
 @extends('layouts.admin-layout')
-@section("title","Create Announcement")
-@section("content")
-    <form method="post" action="{{route('admin.announcement.store')}}">
+@section('title', 'Create Announcement')
+@section('content')
+    <form method="post" action="{{ route('admin.announcement.store') }}">
         @csrf
         <div class="container-fluid">
             <div class="card card-info">
@@ -10,24 +10,35 @@
                 </div>
                 <div class="card-body">
 
-                  
+
                     <div class="form-group mb-3">
-                        <label for="cName" >Product Name</label>
+                        <label for="cName">Product Name</label>
                         <select class="form-control" name="product_id">
                             <option value="">Product Name</option>
-                            @foreach($products as $product) <option value="{{$product->id}}">{{$product->name}}</option>@endforeach
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
                         </select>
+                        @error('product_id')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-                
+
                     <div class="form-group mb-3">
-                        <label for="cName" >Announcement Title</label>
-                        <input id="cName" type="text" class="form-control"   name="announcement_title">
+                        <label for="cName">Announcement Title</label>
+                        <input id="cName" type="text" class="form-control" name="announcement_title">
+                        @error('announcement_title')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group mb-3">
-                        <label for="cName" >Announcement Description</label>
-                        <input id="cName" type="text" class="form-control"  name="announcement_description">
+                        <label for="cName">Announcement Description</label>
+                        <input id="cName" type="text" class="form-control" name="announcement_description">
+                        @error('announcement_description')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
-                
+
                     <div class="input-group mb-3">
 
                         <button type="submit" class="btn btn-secondary">Create</button>
@@ -42,6 +53,3 @@
     </form>
 
 @endsection
-
-
-

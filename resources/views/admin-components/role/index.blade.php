@@ -1,8 +1,6 @@
 
-
-
 @extends('layouts.admin-layout')
-@section("title","Users")
+@section("title","Roles")
 
 @section("content")
     <section class="content">
@@ -12,13 +10,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Users</h3>
+                            <h3 class="card-title">Roles</h3>
 
                             <div class="card-tools">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <td><a href="{{route("admin.user.create")}}" class="btn btn-outline-primary">Create User</a></td>
+                                            <td><a href="{{route("admin.role.create")}}" class="btn btn-outline-primary">Create Role</a></td>
                                         </div>
     
                                     </div>
@@ -47,27 +45,19 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>User Name</th>
-                                    <th>Email</th>
-                                  
-                                    <th>View</th>
-                                    <th>Update</th>
-                                    <th>Delete</th>
+                                    <th>Role Name</th>
+                                
 
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($users as $user)
+                                @foreach($roles as $role)
                                     <tr>
-                                        <td>{{ $user->id }}</td>
-                               
-                                        <td>{{ $user->name}}</td>
-                                        <td>{{ $user->email}}</td>
-                                        <td><a href="{{route("admin.user.show",["id"=>$user->id])}}" class="btn btn-outline-primary">View User</a></td>
-
-                                        <td><a href="{{route("admin.user.edit",["id"=>$user->id])}}" class="btn btn-outline-info">Update User</a></td>
-                                        <td><a href="{{route("admin.user.destroy",["id"=>$user->id])}}" class="btn btn-outline-secondary">Delete User</a></td>
+                                        <td>{{ $role->id }}</td>
+                                        <td>{{ $role->name}}</td>
+                                        <td><a href="{{route("admin.role.edit",["id"=>$role->id])}}" class="btn btn-outline-info">Update Role</a></td>
+                                        <td><a href="{{route("admin.role.destroy",["id"=>$role->id])}}" class="btn btn-outline-secondary">Delete Role</a></td>
                                     </tr>
                                 @endforeach
 
