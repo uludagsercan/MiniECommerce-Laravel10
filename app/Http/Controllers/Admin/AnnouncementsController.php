@@ -19,7 +19,7 @@ class AnnouncementsController extends Controller
     {
         //
         $announcements = Announcement::with("product")->get();
-        return view("admin-components.announcement.index",["announcements"=>$announcements]);
+        return view("admin-components.announcement.index", ["announcements" => $announcements]);
     }
 
     /**
@@ -31,7 +31,7 @@ class AnnouncementsController extends Controller
     {
         //
         $products = Product::all();
-        return view("admin-components.announcement.create",["products"=>$products]);
+        return view("admin-components.announcement.create", ["products" => $products]);
     }
 
     /**
@@ -43,12 +43,19 @@ class AnnouncementsController extends Controller
     public function store(Request $request)
     {
         //
-       
+        $request->validate([
+            'product_id' => ['required'],
+            'announcement_title' => ['required', 'min:3', 'max:255'],
+            'announcement_description' => ['required', 'min:3'],
+        ]);
         $announcement = new Announcement();
         $data = $request->only($announcement->getFillable());
         $announcement->fill($data);
-        $announcement->save();
-        return redirect("admin/announcement");
+        $result = $announcement->save();
+        if ($result == true)
+            return redirect()->back()->with("successMessage", "Ekleme işlemi başarılıdır");
+        else
+            return redirect()->back()->with("errorMessage", "Ekleme işlemi başarısızdır");
     }
 
     /**
@@ -57,10 +64,11 @@ class AnnouncementsController extends Controller
      * @param  \App\Models\Announcement  $announcement
      * @return \Illuminate\Http\Response
      */
-    public function show(Announcement $announcement)
+    public function show($id)
     {
         //
-
+        $announcement = Announcement::with("product")->find($id);
+        return view("admin-components.announcement.view", ['announcement' => $announcement]);
     }
 
     /**
@@ -72,9 +80,9 @@ class AnnouncementsController extends Controller
     public function edit($id)
     {
         //
-        $products=Product::all();
+        $products = Product::all();
         $announcement = Announcement::with("product")->find($id);
-        return view("admin-components.announcement.update",["announcement"=>$announcement,"products"=>$products]);
+        return view("admin-components.announcement.update", ["announcement" => $announcement, "products" => $products]);
     }
 
     /**
@@ -87,15 +95,26 @@ class AnnouncementsController extends Controller
     public function update(Request $request, Announcement $announcement)
     {
         //
+        $request->validate([
+            'product_id' => ['required'],
+            'announcement_title' => ['required', 'min:3', 'max:255'],
+            'announcement_description' => ['required', 'min:3'],
+        ]);
         $data = $request->all();
         $announcement->fill($data);
-        echo $announcement;
-        DB::table("announcements")->where("id",$announcement->id)->update([
-            "product_id"=>$announcement->product_id,
-            "announcement_title"=>$announcement->announcement_title,
-            "announcement_description"=>$announcement->announcement_description
-        ]);
-        return redirect("admin/announcement");
+        try {
+            //code...
+            $result =  DB::table("announcements")->where("id", $announcement->id)->update([
+                "product_id" => $announcement->product_id,
+                "announcement_title" => $announcement->announcement_title,
+                "announcement_description" => $announcement->announcement_description
+            ]);
+            if ($result > 0)
+                return redirect()->back()->with("successMessage", "Güncelleme işlemi başarılıdır");
+            return redirect()->back()->with("errorMessage", "Güncelleme işlemi başarısızdır. Lütfen verilerinizi değiştirerek güncelleme işlemi yapınız");
+        } catch (\Throwable $th) {
+            return redirect()->back()->with("errorMessage", "Güncelleme işlemi sırasında bir hata oluştu" . $th->getMessage());
+        }
     }
 
     /**
@@ -108,8 +127,15 @@ class AnnouncementsController extends Controller
     {
         //
         $announcement = Announcement::find($id);
-        $announcement->delete();
-        return redirect("admin/announcement");
+        try {
+            $announcement->delete();
+        } catch (\Throwable $th) {
+            return redirect()->back()->with("errorMessage", "Silme işlemi başarısız");
+        }
+        return redirect()->back()->with("successMessage", "Silme işlemi başarılıdır");
+
+
+        // return redirect("admin/announcement");
 
     }
 }

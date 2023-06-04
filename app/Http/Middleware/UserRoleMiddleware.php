@@ -19,14 +19,16 @@ class UserRoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-
         if (!Auth::check()) // I included this check because you have it, but it really should be part of your 'auth' middleware, most likely added as part of a route group.
             return redirect('login');
         foreach ($roles as $role) {
+            
+
             $userWithRole = ModelsUser::with("role")->where("id", Auth::user()->id)->get()->first();
             if ($userWithRole->role->name == $role)
                 return $next($request);
-            return redirect("login");
+         
         }
+        return redirect("login");
     }
 }

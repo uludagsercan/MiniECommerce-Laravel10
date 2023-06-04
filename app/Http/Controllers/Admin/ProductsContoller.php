@@ -74,9 +74,12 @@ class ProductsContoller extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
         //
+
+        $product = Product::with("category")->find($id);
+        return view("admin-components.product.view", ["product" => $product]);
     }
 
     /**
@@ -106,17 +109,17 @@ class ProductsContoller extends Controller
         $data = $request->all();
         $product->fill($data);
         $previous_product = Product::find($product->id);
-        if($request->hasFile("picture")){
-            if (File::exists('storage/images/products/'.$previous_product->picture)) {
-                File::delete('storage/images/products/'.$previous_product->picture);
-           }
-           $destination_path = 'public/images/products';
-           $image = $request->file('picture');
-           $extension = $image->getClientOriginalExtension();
-           $full_path = date("dym") . time() . "." . $extension;
-           $path = $request->file('picture')->storeAs($destination_path, $full_path);
-           $product["picture"] = $full_path;
-        }else{
+        if ($request->hasFile("picture")) {
+            if (File::exists('storage/images/products/' . $previous_product->picture)) {
+                File::delete('storage/images/products/' . $previous_product->picture);
+            }
+            $destination_path = 'public/images/products';
+            $image = $request->file('picture');
+            $extension = $image->getClientOriginalExtension();
+            $full_path = date("dym") . time() . "." . $extension;
+            $path = $request->file('picture')->storeAs($destination_path, $full_path);
+            $product["picture"] = $full_path;
+        } else {
             $product["picture"] = $previous_product->picture;
         }
         // if ($request->hasFile('picture') && $previous_product->picture !=$request->picture) {
@@ -131,7 +134,7 @@ class ProductsContoller extends Controller
         //     $product["picture"] = $full_path;
         //     // $product->picture = $request->file('picture')->store('images');
         // }
-        
+
         DB::table("products")->where("id", $request["id"])
             ->update([
                 "name" => $product["name"],
@@ -155,8 +158,8 @@ class ProductsContoller extends Controller
         //
 
         $product = Product::find($id);
-        if (File::exists('storage/images/products/'.$product->picture)) {
-             File::delete('storage/images/products/'.$product->picture);
+        if (File::exists('storage/images/products/' . $product->picture)) {
+            File::delete('storage/images/products/' . $product->picture);
         }
 
         $product->delete();

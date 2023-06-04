@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('mailboxes', function (Blueprint $table) {
             $table->id();
-            $table->string("name",100);
-            $table->string("description",255);
-            //userid gelicek foreign
+            $table->string("to");
+            $table->string("from");
+            $table->string("subject");
+            $table->string("body");
+            $table->enum("mail_types",["read","unread","read_and_trash","unread_and_trash"])->default("unread");
             $table->unsignedBigInteger("user_id");
-            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");;
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('mailbox');
     }
 };
