@@ -13,10 +13,16 @@
                  <div class="input-group mb-3">
 
                      <input type="text" class="form-control" placeholder="Category Name" name="name">
+                     @error('name')
+                     <div class="alert alert-danger">{{ $message }}</div>
+                 @enderror
                  </div>
                  <div class="input-group mb-3">
 
                      <input type="text" class="form-control" placeholder="Category Description" name="description">
+                     @error('description')
+                     <div class="alert alert-danger">{{ $message }}</div>
+                 @enderror
                  </div>
                  <div class="input-group mb-3">
 

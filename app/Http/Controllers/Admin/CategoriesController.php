@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CategoriesController extends Controller
@@ -40,12 +41,41 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $category = new Category();
-        $data = $request->only($category->getFillable());
-        $category->fill($data)->save();
-        return redirect("admin/category");
+        $request->validate([
+            'name' => ['required', 'max:255', 'min:3'],
+            'description' => ['required'],
+        ]);
+
+        try {
+            //code...
+            $category = new Category();
+            $data = $request->only($category->getFillable());
+            $category->fill($data);
+            $category["user_id"]=Auth::getUser()->id;
+            $result =$category->save();
+            if ($result)
+                return redirect()->back()->with("successMessage", "Ekleme İşlemi Başarılıdır");
+            return redirect()->back()->with("errorMessage", "Ekleme İşlemi Başarısızdır ");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", "Ekleme İşlemi Sırasında Bir Hata Oluştu: " . $th->getMessage());
+        }
     }
 
+    public function search(Request $request)
+    {
+        try {
+            //code...
+            $categories = Category::query()
+                ->where("name", 'like', '%' . $request['search'] . '%')
+                ->orWhere("description", 'like', '%' . $request['search'] . '%')
+                ->get();
+            return view('admin-components.category.index', ["categories" => $categories]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
+    }
     /**
      * Display the specified resource.
      *
@@ -66,8 +96,14 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         //
-        $category = Category::all()->where("id", "=", $id)->first();
-        return view("admin-components.category.update", ["category" => $category]);
+        try {
+            //code...
+            $category = Category::all()->where("id", "=", $id)->first();
+            return view("admin-components.category.update", ["category" => $category]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
     }
 
     /**
@@ -80,12 +116,22 @@ class CategoriesController extends Controller
     public function update(Request $request, Category $category)
     {
         //
-
-        $data = $request->all();
-        $category->fill($data);
-        DB::table("categories")->where("id", $category["id"])
-            ->update(["name" => $category["name"], "description" => $category["description"]]);
-        return redirect("admin/category");
+        $request->validate([
+            'name' => ['required', 'max:255', 'min:3'],
+            'description' => ['required'],
+        ]);
+        try {
+            //code...
+            $data = $request->all();
+            $category->fill($data);
+            $result = DB::table("categories")->where("id", $category["id"])
+                ->update(["name" => $category["name"], "description" => $category["description"],"user_id"=>Auth::getUser()->id]);
+            if ($result > 0)
+                return redirect()->back()->with("successMessage", "Güncelleme işlemi başarılıdır");
+            return redirect()->back()->with("errorMessage", "Güncellenen satır sayısı" . $result);
+        } catch (\Throwable $th) {
+            return redirect()->back()->with("errorMessage", "Güncelleme işlemi sırasında bir hata oluşmuştur: " . $th->getMessage());
+        }
     }
 
     /**
@@ -98,8 +144,13 @@ class CategoriesController extends Controller
     {
         //
 
-        $category = Category::find($id);
-        $category->delete();
-        return redirect("admin/category");
+        try {
+            $category = Category::find($id);
+
+            $category->delete();
+            return redirect()->back()->with("successMessage", "Silme işlemi başarılıdır");
+        } catch (\Throwable $th) {
+            return redirect()->back()->with("errorMessage", "Silme işlemi başarısız: " . $th->getMessage());
+        }
     }
 }

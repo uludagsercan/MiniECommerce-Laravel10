@@ -18,7 +18,7 @@ class RolesController extends Controller
     {
         //
         $roles = Role::all();
-        return view("admin-components.role.index",["roles"=>$roles]);
+        return view("admin-components.role.index", ["roles" => $roles]);
     }
 
     /**
@@ -32,6 +32,18 @@ class RolesController extends Controller
         return view("admin-components.role.create");
     }
 
+    public function search(Request $request)
+    {
+        try {
+            //code...
+            $roles = Role::query()->where("name", 'like', '%' . $request['search'] . '%')->get();
+            return view("admin-components.role.index", ["roles" => $roles]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -41,14 +53,24 @@ class RolesController extends Controller
     public function store(Request $request)
     {
         //
+
+
         $request->validate([
-            'name' => ['required', 'max:20','min:3'],
+            'name' => ['required', 'max:20', 'min:3'],
         ]);
-        $role = new Role();
-        $data= $request->all();
-        $role->fill($data);
-        $role->save();
-        return redirect("admin/role");
+
+        try {
+            //code...
+            $role = new Role();
+            $data = $request->all();
+            $role->fill($data);
+            $result = $role->save();
+            if ($result)
+                return redirect()->back()->with("successMessage", "Ekleme İşlemi Başarılıdır");
+            return redirect()->back()->with("errorMessage", "Ekleme İşlemi Başarısızdır ");
+        } catch (\Throwable $th) {
+            return redirect()->back()->with("errorMessage", "Ekleme İşlemi Sırasında Bir Hata Oluştu: " . $th->getMessage());
+        }
     }
 
     /**
@@ -71,9 +93,14 @@ class RolesController extends Controller
     public function edit($id)
     {
         //
-        $role = Role::find($id);
-        return view("admin-components.role.update",["role"=>$role]);
-        
+        try {
+            //code...
+            $role = Role::find($id);
+            return view("admin-components.role.update", ["role" => $role]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
     }
 
     /**
@@ -87,14 +114,23 @@ class RolesController extends Controller
     {
         //
         $request->validate([
-            'name' => ['required', 'max:20','min:3'],
+            'name' => ['required', 'max:20', 'min:3'],
         ]);
-        $data = $request->all();
-        $role->fill($data);
-        DB::table("roles")->where("id",$request->id)->update([
-            "name"=>$role["name"]
-        ]);
-        return redirect("admin/role");
+
+        try {
+            //code...
+            $data = $request->all();
+            $role->fill($data);
+            $result = DB::table("roles")->where("id", $request->id)->update([
+                "name" => $role["name"]
+            ]);
+            if ($result > 0)
+                return redirect()->back()->with("successMessage", "Güncelleme işlemi başarılıdır");
+            return redirect()->back()->with("errorMessage", "Güncellenen satır sayısı" . $result);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", "Güncelleme işlemi sırasında bir hata oluşmuştur: " . $th->getMessage());
+        }
     }
 
     /**
@@ -106,8 +142,16 @@ class RolesController extends Controller
     public function destroy($id)
     {
         //
-        $role = Role::find($id);
-        $role->delete();
-        return redirect("admin/role");
+        try {
+            //code...
+            $role = Role::find($id);
+            $result = $role->delete();
+            if ($result > 0)
+                return redirect()->back()->with("successMessage", "Silme işlemi başarılıdır");
+            return redirect()->back()->with("successMessage", "Silme işlemi başarısızdır");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
     }
 }

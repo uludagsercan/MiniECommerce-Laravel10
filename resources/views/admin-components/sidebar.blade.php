@@ -52,6 +52,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('admin.user.changePasswordView') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Change Password</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a  href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" class="nav-link">

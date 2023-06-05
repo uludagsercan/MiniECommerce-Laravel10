@@ -35,11 +35,11 @@
                         </li>
                       
                    
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{route('admin.mailbox.trashMailboxes')}}" class="nav-link">
                                 <i class="far fa-trash-alt"></i> Trash
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
                 <!-- /.card-body -->

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("to");
             $table->string("from");
             $table->string("subject");
-            $table->string("body");
+            $table->text("body")->nullable();
             $table->enum("mail_types",["read","unread","read_and_trash","unread_and_trash"])->default("unread");
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade")->onUpdate("cascade");

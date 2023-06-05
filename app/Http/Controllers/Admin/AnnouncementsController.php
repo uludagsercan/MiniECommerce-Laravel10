@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Announcement;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AnnouncementsController extends Controller
@@ -48,14 +49,21 @@ class AnnouncementsController extends Controller
             'announcement_title' => ['required', 'min:3', 'max:255'],
             'announcement_description' => ['required', 'min:3'],
         ]);
-        $announcement = new Announcement();
-        $data = $request->only($announcement->getFillable());
-        $announcement->fill($data);
-        $result = $announcement->save();
-        if ($result == true)
-            return redirect()->back()->with("successMessage", "Ekleme işlemi başarılıdır");
-        else
-            return redirect()->back()->with("errorMessage", "Ekleme işlemi başarısızdır");
+        try {
+            //code...
+            $announcement = new Announcement();
+            $data = $request->only($announcement->getFillable());
+            $announcement->fill($data);
+            $announcement["user_id"]=Auth::getUser()->id;
+            $result = $announcement->save();
+            if ($result == true)
+                return redirect()->back()->with("successMessage", "Ekleme işlemi başarılıdır");
+            else
+                return redirect()->back()->with("errorMessage", "Ekleme işlemi başarısızdır");
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", "Ekleme işlemi sırasında bir hata oluştu" . $th->getMessage());
+        }
     }
 
     /**
@@ -67,8 +75,14 @@ class AnnouncementsController extends Controller
     public function show($id)
     {
         //
-        $announcement = Announcement::with("product")->find($id);
-        return view("admin-components.announcement.view", ['announcement' => $announcement]);
+        try {
+            //code...
+            $announcement = Announcement::with("product")->find($id);
+            return view("admin-components.announcement.view", ['announcement' => $announcement]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
     }
 
     /**
@@ -80,9 +94,33 @@ class AnnouncementsController extends Controller
     public function edit($id)
     {
         //
-        $products = Product::all();
-        $announcement = Announcement::with("product")->find($id);
-        return view("admin-components.announcement.update", ["announcement" => $announcement, "products" => $products]);
+        try {
+            //code...
+            $products = Product::all();
+            $announcement = Announcement::with("product")->find($id);
+            return view("admin-components.announcement.update", ["announcement" => $announcement, "products" => $products]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            //code...
+            $announcements = Announcement::with(
+                "product"
+            )->where("announcement_title", 'like', '%' . $request['search'] . '%')
+                ->orWhere("announcement_description", 'like', '%' . $request['search'] . '%')
+                ->orWhereRelation("product", "name", 'like', '%' . $request['search'] . '%')
+                ->orWhereRelation("product", "description", 'like', '%' . $request['search'] . '%')
+                ->get();
+            return view("admin-components.announcement.index", ["announcements" => $announcements]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with("errorMessage", $th->getMessage());
+        }
     }
 
     /**
@@ -107,7 +145,8 @@ class AnnouncementsController extends Controller
             $result =  DB::table("announcements")->where("id", $announcement->id)->update([
                 "product_id" => $announcement->product_id,
                 "announcement_title" => $announcement->announcement_title,
-                "announcement_description" => $announcement->announcement_description
+                "announcement_description" => $announcement->announcement_description,
+                "user_id"=>Auth::getUser()->id
             ]);
             if ($result > 0)
                 return redirect()->back()->with("successMessage", "Güncelleme işlemi başarılıdır");

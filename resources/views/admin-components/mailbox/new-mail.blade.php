@@ -17,16 +17,18 @@
             </div>
             <!-- /.card-header -->
             <form method="post" action="{{ route('admin.mailbox.sendMail') }}">
-              @csrf
+                @csrf
                 <div class="card-body">
                     <div class="form-group">
                         <select class="form-control" name="to">
-                          <option value="">To:</option>
+                            <option value="">To:</option>
                             @foreach ($users as $user)
-                            <option  value="{{ $user->email }}">{{ $user->email }}</option>
+                                <option value="{{ $user->email }}">{{ $user->email }}</option>
                             @endforeach
                         </select>
-                    
+                        @error('to')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
 
                     </div>
                     <div class="form-group">
@@ -36,6 +38,9 @@
                         <textarea id="compose-textarea" class="form-control" style="height: 300px" name="body">
        
                   </textarea>
+                        @error('body')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                 </div>

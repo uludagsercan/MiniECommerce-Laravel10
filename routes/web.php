@@ -56,6 +56,8 @@ Route::prefix('/admin')->middleware(["auth", "roles:admin,user"])->name('admin.'
         Route::post('/edit-product', 'update')->name('update');
         Route::get('/destroy-product/{id}', 'destroy')->name('destroy');
         Route::get('/view-product/{id}', 'show')->name('show');
+        Route::post('/search-product', 'search')->name('search');
+
     });
     Route::prefix("/category")->middleware(["auth", "roles:admin"])->name("category.")->controller(\App\Http\Controllers\Admin\CategoriesController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -65,6 +67,8 @@ Route::prefix('/admin')->middleware(["auth", "roles:admin,user"])->name('admin.'
         Route::get('/edit-category/{id}', 'edit')->name('edit');
         Route::get('/destroy-category/{id}', 'destroy')->name('destroy');
         Route::get('/view-category/{id}', 'show')->name('show');
+        Route::post('/search-category', 'search')->name('search');
+        
     });
 
     Route::prefix("/announcement")->middleware(["auth", "roles:admin"])->name("announcement.")->controller(\App\Http\Controllers\Admin\AnnouncementsController::class)->group(function () {
@@ -75,6 +79,8 @@ Route::prefix('/admin')->middleware(["auth", "roles:admin,user"])->name('admin.'
         Route::get('/edit-announcement/{id}', 'edit')->name('edit');
         Route::get('/destroy-announcement/{id}', 'destroy')->name('destroy');
         Route::get('/view-announcement/{id}', 'show')->name('show');
+        Route::post('/search-announcement', 'search')->name('search');
+
     });
     Route::prefix("/user")->middleware(["auth", "roles:admin,user"])->name("user.")->controller(\App\Http\Controllers\Admin\UsersController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -83,7 +89,13 @@ Route::prefix('/admin')->middleware(["auth", "roles:admin,user"])->name('admin.'
         Route::post('/edit-user', 'update')->name('update');
         Route::get('/edit-user/{id}', 'edit')->name('edit');
         Route::get('/destroy-user/{id}', 'destroy')->name('destroy');
+        Route::post('/search-user', 'search')->name('search');
+
         Route::get('/view-user/{id}', 'show')->middleware(["auth", "roles:admin,user"])->name('show');
+        Route::get('/change-password','changePasswordView')->middleware(["auth", "roles:admin,user"])->name('changePasswordView');
+
+        Route::post('/change-password','changePassword')->middleware(["auth", "roles:admin,user"])->name('changePassword');
+
     });
     Route::prefix("/role")->middleware(["auth", "roles:admin"])->name("role.")->controller(\App\Http\Controllers\Admin\RolesController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -93,6 +105,8 @@ Route::prefix('/admin')->middleware(["auth", "roles:admin,user"])->name('admin.'
         Route::get('/edit-role/{id}', 'edit')->name('edit');
         Route::get('/destroy-role/{id}', 'destroy')->name('destroy');
         Route::get('/view-role/{id}', 'show')->name('show');
+        Route::post('/search-role', 'search')->name('search');
+
     });
 });
 Route::prefix("/")->name("home.")->controller(HomeController::class)->group(function () {

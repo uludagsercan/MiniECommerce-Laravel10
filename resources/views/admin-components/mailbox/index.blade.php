@@ -30,7 +30,6 @@
                                 <th>User</th>
                                 <th>Message</th>
                                 <th>Created Date</th>
-                                <th>Delete</th>
 
                             </tr>
                         </thead>
@@ -42,11 +41,7 @@
                                         <td class="mailbox-subject"><a  @if ($mailbox->mail_types == 'unread') style="color: blue;cursor:pointer"@else style="color:black;cursor: pointer" @endif href="{{ route('admin.mailbox.readMailbox', ['id' => $mailbox->id]) }}"><b>{{ $mailbox->subject }}</b>-{{ $mailbox->body }}
                                         </a></td>
                                         <td class="mailbox-date"><a  @if ($mailbox->mail_types == 'unread') style="color: blue;cursor:pointer"@else style="color:black;cursor: pointer" @endif href="{{ route('admin.mailbox.readMailbox', ['id' => $mailbox->id]) }}">{{ $mailbox->created_at }}</a></td>
-                                        <td>
-
-                                            <a href="{{ route('admin.mailbox.deleteMail', ['id' => $mailbox->id]) }}">
-                                                <i class="far fa-trash-alt"></i> </a>
-                                        </td>
+                                     
                                 </tr>
                             @endforeach
                         </tbody>

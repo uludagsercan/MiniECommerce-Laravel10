@@ -25,13 +25,18 @@
 
                                     <div class="col-md-8">
                                         <div class="input-group" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control " placeholder="Search">
-        
-                                            <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                            <form method="post" action="{{ route('admin.product.search') }}">
+                                                @csrf
+
+                                                <input type="text" name="search" class="form-control "
+                                                    placeholder="Search">
+
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-default">
+                                                        <i class="fas fa-search"></i>
+                                                        </a>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +70,7 @@
                                     <tr>
                                         <td>{{ $product->id }}</td>
                                         <td><img src="{{asset('/storage/images/products/'.$product->picture)}}" alt="product" style="width: 100px;" ></td>
-                                        <td>{{ $product->category_name}}</td>
+                                        <td>{{ $product->category->name}}</td>
                                         <td>{{$product->name }}</td>
                                         <td>{{ $product->description}}</td>
                                         <td>{{ $product->price}}$</td>

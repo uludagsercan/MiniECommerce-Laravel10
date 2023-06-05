@@ -23,13 +23,18 @@
 
                                     <div class="col-md-8">
                                         <div class="input-group" style="width: 300px;">
-                                            <input type="text" name="table_search" class="form-control " placeholder="Search">
-        
-                                            <div class="input-group-append">
-                                                <button type="submit" class="btn btn-default">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                            <form method="post" action="{{ route('admin.announcement.search') }}">
+                                                @csrf
+
+                                                <input type="text" name="search" class="form-control "
+                                                    placeholder="Search">
+
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-default">
+                                                        <i class="fas fa-search"></i>
+                                                        </a>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

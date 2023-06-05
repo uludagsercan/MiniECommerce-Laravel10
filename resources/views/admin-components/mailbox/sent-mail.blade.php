@@ -31,7 +31,6 @@
                                 <th>User</th>
                                 <th>Message</th>
                                 <th>Created Date</th>
-                                <th>Delete</th>
 
                             </tr>
                         </thead>
@@ -39,15 +38,11 @@
                             @foreach ($mailboxes as $mailbox)
                                 <tr>
                                  
-                                    <td class="mailbox-name">{{ $mailbox->user->name }}</td>
-                                    <td class="mailbox-subject"><b>{{ $mailbox->subject }}</b>-{{ $mailbox->body }}
+                                    <td class="mailbox-name"><a href="{{ route('admin.mailbox.readMailbox', ['id' => $mailbox->id]) }}">{{ $mailbox->user->name }}</a></td>
+                                    <td class="mailbox-subject"><a href="{{ route('admin.mailbox.readMailbox', ['id' => $mailbox->id]) }}"><b>{{ $mailbox->subject }}</b>-{{ $mailbox->body }}</a>
                                     </td>
-                                    <td class="mailbox-date">{{ $mailbox->created_at }}</td>
-                                    <td>
-
-                                        <a href="{{ route('admin.mailbox.deleteMail', ['id' => $mailbox->id]) }}">
-                                            <i class="far fa-trash-alt"></i> </a>
-                                    </td>
+                                    <td class="mailbox-date"><a href="{{ route('admin.mailbox.readMailbox', ['id' => $mailbox->id]) }}">{{ $mailbox->created_at }}</a></td>
+                               
                                 </tr>
                             @endforeach
 

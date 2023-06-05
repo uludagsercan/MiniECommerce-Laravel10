@@ -1,8 +1,8 @@
 @extends('layouts.admin-layout')
-@section("title","Update Category")
+@section('title', 'Update Category')
 
-@section("content")
-    <form method="post" action="{{route('admin.category.update')}}" >
+@section('content')
+    <form method="post" action="{{ route('admin.category.update') }}">
         @csrf
         <div class="container-fluid">
             <div class="card card-info">
@@ -11,16 +11,25 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <label for="cName" >Category Name</label>
-                        <input id="cName" type="text" class="form-control" style="visibility: hidden" value="{{$category->id}}" name="id">
+                        <label for="cName">Category Name</label>
+                        <input id="cName" type="text" class="form-control" style="visibility: hidden"
+                            value="{{ $category->id }}" name="id">
                     </div>
                     <div class="form-group mb-3">
-                        <label for="cName" >Category Name</label>
-                        <input id="cName" type="text" class="form-control" value="{{$category->name}}" name="name">
+                        <label for="cName">Category Name</label>
+                        <input id="cName" type="text" class="form-control" value="{{ $category->name }}"
+                            name="name">
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group mb-3">
-                        <label for="description" >Category Description</label>
-                        <input id="description" type="text" class="form-control" value="{{$category->description}}" name="description">
+                        <label for="description">Category Description</label>
+                        <input id="description" type="text" class="form-control" value="{{ $category->description }}"
+                            name="description">
+                        @error('description')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="input-group mb-3">
 
@@ -35,5 +44,3 @@
 
     </form>
 @endsection
-
-
